@@ -147,5 +147,57 @@ namespace CreditCards.UITests
                 Assert.Equal(ApplyUrl, driver.Url);
             }
         }
+
+        [Fact]
+
+        public void BeSubmittedWhenValid()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(ApplyUrl);
+                DemoHelper.Pause();
+
+                Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
+                Assert.Equal(ApplyUrl, driver.Url);
+
+                driver.FindElement(By.Id("FirstName")).SendKeys("Vlad");
+                driver.FindElement(By.Id("LastName")).SendKeys("Alex");
+                driver.FindElement(By.Id("FrequentFlyerNumber")).SendKeys("120");
+                driver.FindElement(By.Id("Age")).SendKeys("29");
+                driver.FindElement(By.Id("GrossAnnualIncome")).SendKeys("10000");
+                driver.FindElement(By.Id("Single")).Click();
+
+                DemoHelper.Pause();
+
+                IWebElement businessSourceSelectElement = driver.FindElement(By.Id("BusinessSource"));
+                SelectElement businessSource = new SelectElement(businessSourceSelectElement);
+                DemoHelper.Pause(2000);
+                businessSource.SelectByIndex(2);
+                DemoHelper.Pause(2000);
+                businessSource.SelectByText("Word of Mouth");
+                DemoHelper.Pause(2000);
+                businessSource.SelectByValue("TV");
+                DemoHelper.Pause();
+
+                driver.FindElement(By.Id("TermsAccepted")).Click();
+
+                DemoHelper.Pause();
+
+                driver.FindElement(By.Id("SubmitApplication")).Click();
+
+                DemoHelper.Pause();
+
+                Assert.Equal("Application Complete - Credit Cards", driver.Title);
+                Assert.Equal("ReferredToHuman", driver.FindElement(By.Id("Decision")).Text);
+                Assert.NotEmpty(driver.FindElement(By.Id("ReferenceNumber")).Text);
+                Assert.Equal("Vlad Alex", driver.FindElement(By.Id("FullName")).Text);
+                Assert.Equal("29", driver.FindElement(By.Id("Age")).Text);
+                Assert.Equal("10000", driver.FindElement(By.Id("Income")).Text);
+                Assert.Equal("Single", driver.FindElement(By.Id("RelationshipStatus")).Text);
+                Assert.Equal("TV", driver.FindElement(By.Id("BusinessSource")).Text);
+
+                DemoHelper.Pause();
+            }
+        }
     }
 }

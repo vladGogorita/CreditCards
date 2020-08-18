@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using Xunit;
 
 namespace CreditCards.UITests
@@ -14,12 +15,25 @@ namespace CreditCards.UITests
 
         [Fact]
         [Trait("Category", "Smoke")]
-        public void LoadApplicationPage()
+        public void LoadHomePage()
         {
             using (IWebDriver driver = new ChromeDriver())
             {
                 driver.Navigate().GoToUrl(HomeUrl);
 
+                driver.Manage().Window.Maximize();
+                DemoHelper.Pause();
+                driver.Manage().Window.Minimize();
+                DemoHelper.Pause();
+                driver.Manage().Window.Size = new Size(300, 400);
+                DemoHelper.Pause();
+                driver.Manage().Window.Position = new Point(1, 1);
+                DemoHelper.Pause();
+                driver.Manage().Window.Position = new Point(50, 50);
+                DemoHelper.Pause();
+                driver.Manage().Window.Position = new Point(100, 100);
+                DemoHelper.Pause();
+                driver.Manage().Window.FullScreen();
                 DemoHelper.Pause();
 
                 Assert.Equal(HomeTitle, driver.Title);
@@ -126,6 +140,5 @@ namespace CreditCards.UITests
 
             }
         }
-
     }
 }
