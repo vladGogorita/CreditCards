@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -138,6 +139,49 @@ namespace CreditCards.UITests
                 Assert.Equal("Gold Credit Card", tableCells[4].Text);
                 Assert.Equal("17% APR", tableCells[5].Text);
 
+            }
+        }
+
+        [Fact]
+        public void OpenContactPage()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(HomeUrl);
+                DemoHelper.Pause();
+
+                IWebElement contactButton = driver.FindElement(By.Id("ContactFooter"));
+                contactButton.Click();
+
+                DemoHelper.Pause();
+
+                ReadOnlyCollection<string> allTabs = driver.WindowHandles;
+
+                string contactTab = allTabs[1];
+                driver.SwitchTo().Window(contactTab);
+
+                DemoHelper.Pause();
+
+                Assert.Equal("Contact - Credit Cards", driver.Title);
+            }
+        }
+
+        [Fact]
+        public void HandleLiveChatAlert()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(HomeUrl);
+
+                IWebElement liveChatButton = driver.FindElement(By.Id("LiveChat"));
+                liveChatButton.Click();
+
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+
+                IAlert alert = wait.Until(ExpectedConditions.AlertIsPresent());
+                alert.Accept();
+
+                DemoHelper.Pause();
             }
         }
     }
